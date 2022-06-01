@@ -2,12 +2,12 @@
 let rec pow (x, n) = if n = 0 then 1. else x *. pow(x, n-1);;
 
 (* 3.7 (2) *)
-let rec pow x n =
+let rec pow (x, n) =
   let m = n mod 2 in
   let d = n / 2 in
   if n = 0 then 1.
   else if n = 1 then x
-  else pow (x ** 2.) d *. pow x m;;
+  else pow ((x ** 2.), d) *. pow (x, m);;
 
 (* 3.8 *)
 let rec iterpow (i, res, n) =
