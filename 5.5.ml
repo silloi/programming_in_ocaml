@@ -150,11 +150,46 @@ let diff s1 s2 =
   diff_rec s1 s2;;
 
 (* 5.4 *)
+let rec map f = function
+    [] -> []
+  | x :: rest -> f x :: map f rest;;
+
+let f x = x * 2;;
+let g x = x + 1;;
+
+map f (map g [1; 2; 3]);;
+map (fun y -> let x = g y in f x) [1; 2; 3];;
 
 (* 5.5 *)
+let rec fold_right f l e = 
+  match l with
+      [] -> e
+    | x :: rest -> f x (fold_right f rest e);;
+
+let concat l = let f ll x = ll @ x
+in fold_right f l [];;
+
+let forall p l = let f x y = (p x) && y in fold_right f l true;;
+
+let exists p l = let f x y = (p x) || y in fold_right f l false;;
 
 (* 5.6 *)
+(* let rec quick_sort = function
+        ([] | [_]) as l -> l
+      | pivot :: rest ->
+        let rec partition left right sorted = function
+              [] -> quick_sort sorted
+          | y :: ys -> if pivot < y then partition left (y :: right) ys sorted
+                          else partition (y :: left) right ys sorted
+in partition [] [] [] rest;; *)
+
 
 (* 5.7 *)
+(* let squares r =
+  let sqrt_r = sqrt (float_of_int r) in
+    let xlist =  *)
 
 (* 5.8 *)
+(* let map2 f = function
+    [] -> []
+  | x :: rest ->  *)
