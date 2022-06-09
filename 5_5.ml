@@ -183,6 +183,25 @@ let exists p l = let f x y = (p x) || y in fold_right f l false;;
                           else partition (y :: left) right ys sorted
 in partition [] [] [] rest;; *)
 
+type 'a tree = Lf | Br of 'a * 'a tree * 'a tree;;
+
+let rec preord t l =
+  match t with
+    Lf -> l
+  | Br(x, left, right) -> x :: (preord left (preord right l));;
+
+let rec mem t x =
+  match t with
+    Lf -> false
+  | Br (y, left, right) ->
+    if x = y then true
+    else if x < y then mem left x else mem right x
+let rec add t x =
+  match t with
+    Lf -> Br (x, Lf, Lf)
+  | (Br (y, left, right) as whole) when x = y -> whole
+  | Br (y, left, right) when x < y -> Br(y, add left x, right)
+  | Br (y, left, right) -> Br(y, left, add right x);;
 
 (* 5.7 *)
 (* let squares r =
@@ -193,3 +212,32 @@ in partition [] [] [] rest;; *)
 (* let map2 f = function
     [] -> []
   | x :: rest ->  *)
+
+type 'a tree = Lf | Br of 'a * 'a tree * 'a tree;;
+let chartree = Br ('a',
+  Br ('b',
+    Br ('d', Lf, Lf),
+  Lf),
+    Br ('c',
+      Br ('e', Lf, Lf),
+      Br('f', Lf, Lf)
+    )
+  );;
+
+type 'a rosetree = RLf | RBr of 'a * 'a rosetree list;;
+let rec tree_of_rtree = function
+  RLf -> Br (None, Lf, Lf)
+  | RBr (a, rtrees) -> Br (Some a, tree_of_rtreelist rtrees, Lf)
+and tree_of_rtreelist = function
+  [] ->  Lf
+| rtree :: rest -> tree_of_rtreelist (rtree :: rest);;
+
+let rtree =
+  RBr ("a", [
+    RBr ("b", [
+      RBr ("c", [RLf]);
+      RLf;
+      RBr ("d", [RLf])]);
+    RBr ("e", [RLf]);
+    RBr ("f", [RLf])]);;
+tree_of_rtree rtree;;
