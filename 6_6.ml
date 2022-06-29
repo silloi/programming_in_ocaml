@@ -116,9 +116,22 @@ type ('a, 'b) xml = XLf of 'b option | XBr of 'a * ('a, 'b) xml list;;
 
 type token = PCDATA of string | Open of string | Close of string;;
 
+let addressbook =
+  XBr ("addressbook", [
+        XBr ("person", [
+                XBr ("name", [XLf (Some "Atsushi Igarashi")]);
+                XBr ("tel", [XLf (Some "075-123-4567")])]);
+        XBr ("person", [XLf None]);
+        XBr ("person", [XLf None])]);;
+
+let addressbook_token_list = [Open "addressbook"; Open "person"; Open "name"; PCDATA "Atsushi Igarashi"];;
+
 (* let rec xml_of_tokens : (token list -> (string, string) xml) = function
     [] -> XLf None
-  | x :: rest -> let rec handle_xml_tag tag = function
-        PCDATA data -> XBr (data, handle_xml_tag )  *)
+  | x :: rest -> let rec tokens_rec (t: token) (data: token list) =
+    match t with
+        PCDATA data -> XLf (Some data)
+      | Open _ -> tokens_rec t data
+      | Close tag -> XBr (tag, [tokens_rec t data])
+  in tokens_rec x rest;; *)
 
-        

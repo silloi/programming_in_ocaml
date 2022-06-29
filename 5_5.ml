@@ -230,7 +230,8 @@ let rec tree_of_rtree = function
   | RBr (a, rtrees) -> Br (Some a, tree_of_rtreelist rtrees, Lf)
 and tree_of_rtreelist = function
   [] ->  Lf
-| rtree :: rest -> tree_of_rtreelist (rtree :: rest);;
+| rtree :: rest -> let Br (a, left, Lf) = tree_of_rtree rtree in
+Br (a, left, tree_of_rtreelist rest);;
 
 let rtree =
   RBr ("a", [
@@ -241,3 +242,9 @@ let rtree =
     RBr ("e", [RLf]);
     RBr ("f", [RLf])]);;
 tree_of_rtree rtree;;
+
+let is_prime x =
+  let rec is_divisible_from_2_to n =
+ (n > 1) && ((x mod n = 0) || is_divisible_from_2_to (n-1))
+in not (is_divisible_from_2_to (x-1));;
+
